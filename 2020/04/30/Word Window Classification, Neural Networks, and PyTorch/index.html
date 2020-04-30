@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>03 Word Window Classification, Neural Networks, and PyTorch | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Classification setup and notation通常我们有由样本组成的训练数据集  \{x_i,y_i\}_{i&#x3D;1}^N$x_i$是输入，例如单词(索引或是向量)，句子，文档等，维度为$d$$y_i$是我们尝试预测的标签($C$各类别中的一个)，例如 :     类别：感情，命名实体，购买&#x2F;售出的决定 其他单词 之后：多词序列的Classification intuition">
+<meta property="og:type" content="article">
+<meta property="og:title" content="03 Word Window Classification, Neural Networks, and PyTorch">
+<meta property="og:url" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Classification setup and notation通常我们有由样本组成的训练数据集  \{x_i,y_i\}_{i&#x3D;1}^N$x_i$是输入，例如单词(索引或是向量)，句子，文档等，维度为$d$$y_i$是我们尝试预测的标签($C$各类别中的一个)，例如 :     类别：感情，命名实体，购买&#x2F;售出的决定 其他单词 之后：多词序列的Classification intuition">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image01.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image02.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image03.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image04.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image05.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image06.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image07.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image08.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image09.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image10.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image11.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image12.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image13.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image14.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image15.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image16.png">
+<meta property="article:published_time" content="2020-04-30T15:46:55.264Z">
+<meta property="article:modified_time" content="2020-04-30T15:49:19.949Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="cs224n课程">
+<meta property="article:tag" content="nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image01.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Word Window Classification, Neural Networks, and PyTorch" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/" class="article-date">
+  <time datetime="2020-04-30T15:46:55.264Z" itemprop="datePublished">2020-04-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      03 Word Window Classification, Neural Networks, and PyTorch
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Classification-setup-and-notation"><a href="#Classification-setup-and-notation" class="headerlink" title="Classification setup and notation"></a>Classification setup and notation</h2><p>通常我们有由样本组成的训练数据集</p>
+<script type="math/tex; mode=display">
+\{x_i,y_i\}_{i=1}^N</script><p>$x_i$是输入，例如单词(索引或是向量)，句子，文档等，维度为$d$<br>$y_i$是我们尝试预测的标签($C$各类别中的一个)，例如 :   </p>
+<ul>
+<li>类别：感情，命名实体，购买/售出的决定</li>
+<li>其他单词</li>
+<li>之后：多词序列的<h3 id="Classification-intuition"><a href="#Classification-intuition" class="headerlink" title="Classification intuition"></a>Classification intuition</h3></li>
+</ul>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image01.png" alt></p>
+<p>训练数据 : $\{x_i,y_i\}_{i=1}^N$<br>简单的说明情况   </p>
+<ul>
+<li>固定的二维单词向量分类</li>
+<li>使用softmax/logistic回归</li>
+<li>线性决策边界</li>
+</ul>
+<p><strong>传统的机器学习/统计学方法：</strong> 假设$x_i$是固定的，训练softmax/logistic回归的权重$W\in \mathbb{R}^{C\times d}$来决定决策边界(超平面)<br>方法 : 对每个$x$，预测</p>
+<script type="math/tex; mode=display">
+p(y|x)=\frac{exp(W_y\cdot x)}{\sum_{c=1}^Cexp(W_c\cdot x)}</script><p>我们可以将预测函数分为两个步骤：  </p>
+<ol>
+<li>将$W$的第$y$行和$x$中的对应行相乘得到分数，计算所有的$fc,for  c=1,…,C$<script type="math/tex; mode=display">
+W_y\cdot x=\sum^d_{i=1}W_{yi}x_i=f_y</script></li>
+<li>使用softmax函数获得归一化的概率<script type="math/tex; mode=display">
+p(y|x)=\frac{exp(f_y)}{\sum^C_{c=1}exp(f_c)}</script><h3 id="Training-with-softmax-and-cross-entropy-loss"><a href="#Training-with-softmax-and-cross-entropy-loss" class="headerlink" title="Training with softmax and cross-entropy loss"></a>Training with softmax and cross-entropy loss</h3>对于每个训练样本$(x,y)$，我们的目标是最大化正确类$y$的概率，或者我们可以最小化该类的负对数概率  <script type="math/tex; mode=display">
+-logp(y|x)=-log(\frac{exp(f_y)}{})</script><h3 id="Background-What-is-“cross-entropy”-loss-error"><a href="#Background-What-is-“cross-entropy”-loss-error" class="headerlink" title="Background: What is “cross entropy” loss/error?"></a>Background: What is “cross entropy” loss/error?</h3></li>
+</ol>
+<ul>
+<li>交叉熵的概念来源于信息论，衡量两个分布之间的差异</li>
+<li>令真实概率分布为$p$</li>
+<li>令我们计算的模型概率为$q$</li>
+<li>交叉熵为  <script type="math/tex; mode=display">
+H(p,q)=-\sum^C_{c=1}p(c)logq(c)</script></li>
+<li>假设groud truth(or true or gold or target)的概率分布在正确的类上为1，在其他任何地方为0 ：$p=[0,…,0,1,0,…0]$ </li>
+<li>因为p是one-hot向量，所以唯一剩下的项是真实类的负对数概率</li>
+</ul>
+<h3 id="Classification-over-a-full-dataset"><a href="#Classification-over-a-full-dataset" class="headerlink" title="Classification over a full dataset"></a>Classification over a full dataset</h3><p>在整个数据集$\{x_i,y_i\}_{i=1}^N$上的交叉熵损失函数，是所有样本的交叉熵的均值  </p>
+<script type="math/tex; mode=display">
+J(\theta)=\frac{1}{N}\sum^N_{i=1}-log(\frac{e^{f_{yi}}}{\sum^C_{c=1}e^{f_c}})</script><p>我们不使用</p>
+<script type="math/tex; mode=display">
+f_y=f_y(x)=W_y\cdot x=\sum^d_{j=1}W_{yj}x_j</script><p>我们使用矩阵来表示$f$</p>
+<script type="math/tex; mode=display">f=Wx</script><h3 id="Traditional-ML-optimization"><a href="#Traditional-ML-optimization" class="headerlink" title="Traditional ML optimization"></a>Traditional ML optimization</h3><ul>
+<li>一般机器学习的参数$\theta$通常只由W的列组成<script type="math/tex; mode=display">
+\theta=[W_1,...,W_d]=W(:)^T\in \mathbb{R}^{Cd}</script></li>
+<li>因此，我们只通过以下方式更新决策边界<script type="math/tex; mode=display">
+\bigtriangledown_{\theta}J(\theta)=[\bigtriangledown_{W_1},...,\bigtriangledown_{W_d}]^T\in \mathbb{R}^{Cd}</script><h2 id="Neural-Network-Classifiers"><a href="#Neural-Network-Classifiers" class="headerlink" title="Neural Network Classifiers"></a>Neural Network Classifiers</h2></li>
+</ul>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image02.png" alt></p>
+<ul>
+<li>单独使用Softmax(≈logistic回归)并不十分强大</li>
+<li>Softmax只给出线性决策边界  <ul>
+<li>这可能是相当有限的，当问题很复杂时是无用的</li>
+<li>纠正这些错误不是很酷吗?</li>
+</ul>
+</li>
+</ul>
+<h3 id="Neural-Nets-for-the-Win"><a href="#Neural-Nets-for-the-Win" class="headerlink" title="Neural Nets for the Win!"></a>Neural Nets for the Win!</h3><p>神经网络可以学习更复杂的函数和非线性决策边界</p>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image03.png" alt></p>
+<p>更高级的分类需要</p>
+<ul>
+<li>词向量</li>
+<li>更深层次的深层神经网络<h3 id="Classification-difference-with-word-vectors"><a href="#Classification-difference-with-word-vectors" class="headerlink" title="Classification difference with word vectors"></a>Classification difference with word vectors</h3>一般在NLP深度学习中</li>
+<li>我们学习了矩阵$W$和词向量$x$</li>
+<li>我们学习传统参数和表示</li>
+<li>词向量是对one-hot向量的重新表示，在中间层向量空间中移动它们，以便使用(线性)softmax分类器通过x = Le层进行分类  <ul>
+<li>即将词向量理解为一层神经网络，输入单词的one-hot向量并获得单词的词向量表示，并且我们需要对其进行更新。其中，$Vd$是数量很大的参数<script type="math/tex; mode=display">
+\bigtriangledown_{\theta}J(\theta)=[\bigtriangledown_{W_1},...,\bigtriangledown_{dardvark},...\bigtriangledown_{W_d}]^T\in \mathbb{R}^{Cd+Vd}</script><h3 id="Neural-computation"><a href="#Neural-computation" class="headerlink" title="Neural computation"></a>Neural computation</h3></li>
+</ul>
+</li>
+</ul>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image04.png" alt></p>
+<h3 id="A-neuron-can-be-a-binary-logistic-regression-unit"><a href="#A-neuron-can-be-a-binary-logistic-regression-unit" class="headerlink" title="A neuron can be a binary logistic regression unit"></a>A neuron can be a binary logistic regression unit</h3><p>$f$为非线性激活函数(例如sigmoid函数)，$w$为权重向量，$b$为偏置向量，$h$为隐藏层变量对应的向量，$x$为输入向量</p>
+<script type="math/tex; mode=display">
+h_{w,b}=f(w^Tx+b)</script><script type="math/tex; mode=display">
+f(z)=\frac{1}{1+e^{-z}}</script><p>$b$ : 我们可以有一个“总是打开”的特性，它给出一个先验类，或者将它作为一个偏向项分离出来<br>$w,b$是神经元的参数</p>
+<h3 id="A-neural-network-running-several-logistic-regressions-at-the-same-time"><a href="#A-neural-network-running-several-logistic-regressions-at-the-same-time" class="headerlink" title="A neural network = running several logistic regressions at the same time"></a>A neural network = running several logistic regressions at the same time</h3><p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image05.png" alt></p>
+<p>如果我们输入一个向量通过一系列逻辑回归函数，那么我们得到一个输出向量，但是我们不需要提前决定这些逻辑回归试图预测的变量是什么。</p>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image06.png" alt></p>
+<p>我们可以输入另一个logistic回归函数。损失函数将指导中间隐藏变量应该是什么，以便更好地预测下一层的目标。我们当然可以使用更多层的神经网络。</p>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image07.png" alt></p>
+<h3 id="Matrix-notation-for-a-layer"><a href="#Matrix-notation-for-a-layer" class="headerlink" title="Matrix notation for a layer"></a>Matrix notation for a layer</h3><p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image08.png" alt></p>
+<p>我们有</p>
+<script type="math/tex; mode=display">a_1=f(W_11x_1+W_12x_2+W_13x_3+b_1)</script><script type="math/tex; mode=display">a_2=f(W_21x_1+W_22x_2+W_23x_3+b_2)</script><p>通过矩阵表示的运算有</p>
+<script type="math/tex; mode=display">z=Wx+b</script><script type="math/tex; mode=display">a=f(z)</script><p>激活函数$f$在运算时是element-wise逐元素的</p>
+<script type="math/tex; mode=display">f([z_1,z_2,z_3])=[f(z_1),f(z_2),f(z_3)]</script><h3 id="Non-linearities-aka-“f-”-Why-they’re-needed"><a href="#Non-linearities-aka-“f-”-Why-they’re-needed" class="headerlink" title="Non-linearities (aka “f ”): Why they’re needed"></a>Non-linearities (aka “f ”): Why they’re needed</h3><p>例如：函数近似，如回归或分类</p>
+<ul>
+<li>没有非线性，深度神经网络只能做线性变换</li>
+<li>多个线性变换可以组成一个的线性变换$W_1W_2x=Wx$，因为线性变换是以某种方式旋转和拉伸空间，多次的旋转和拉伸可以融合为一次线性变换</li>
+<li>对于非线性函数而言，使用更多的层，他们可以近似更复杂的函数</li>
+</ul>
+<h2 id="Named-Entity-Recognition-NER"><a href="#Named-Entity-Recognition-NER" class="headerlink" title="Named Entity Recognition (NER)"></a>Named Entity Recognition (NER)</h2><ul>
+<li>任务：例如，查找和分类文本中的名称</li>
+</ul>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image09.png" alt></p>
+<ul>
+<li>可能的用途 : <ul>
+<li>跟踪文档中提到的特定实体（组织、个人、地点、歌曲名、电影名等）</li>
+<li>对于问题回答，答案通常是命名实体</li>
+<li>许多需要的信息实际上是命名实体之间的关联</li>
+<li>同样的技术可以扩展到其他 slot-filling 槽填充分类</li>
+</ul>
+</li>
+<li>通常后面是命名实体链接/规范化到知识库</li>
+</ul>
+<h3 id="Named-Entity-Recognition-on-word-sequences"><a href="#Named-Entity-Recognition-on-word-sequences" class="headerlink" title="Named Entity Recognition on word sequences"></a>Named Entity Recognition on word sequences</h3><p>我们通过在上下文中对单词进行分类，然后将实体提取为单词子序列来预测实体</p>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image10.png" alt></p>
+<h3 id="Why-might-NER-be-hard"><a href="#Why-might-NER-be-hard" class="headerlink" title="Why might NER be hard?"></a>Why might NER be hard?</h3><ul>
+<li><p>很难计算出实体的边界</p>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image11.png" alt><br>第一个实体是 “First National Bank” 还是 “National Bank”</p>
+</li>
+<li>很难知道某物是否是一个实体，是一所名为“Future School” 的学校，还是这是一所未来的学校？</li>
+<li><p>很难知道未知/新奇实体的类别</p>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image12.png" alt><br>“Zig Ziglar” ? 一个人</p>
+</li>
+<li><p>实体类是模糊的，依赖于上下文</p>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image13.png" alt><br>这里的“Charles Schwab” 是 PER 不是 ORG</p>
+</li>
+</ul>
+<h2 id="Word-window-classification"><a href="#Word-window-classification" class="headerlink" title="Word window classification"></a>Word window classification</h2><ul>
+<li>思想：在<strong>相邻词的上下文窗口</strong>中对一个词进行分类</li>
+<li>例如，上下文中一个单词的命名实体分类(人、地点、组织、NONE)</li>
+<li>在上下文中对单词进行分类的一个简单方法可能是对窗口中的单词向量进行<strong>平均</strong>，并对平均向量进行分类(问题是这会丢失单词位置信息)</li>
+</ul>
+<h3 id="Window-classification-Softmax"><a href="#Window-classification-Softmax" class="headerlink" title="Window classification: Softmax"></a>Window classification: Softmax</h3><ul>
+<li>训练softmax分类器对中心词进行分类，方法是在一个窗口内<strong>将中心词周围的词向量串联起来</strong></li>
+<li>例子：在这句话的上下文中对“Paris”进行分类，窗口长度为2</li>
+</ul>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image14.png" alt></p>
+<ul>
+<li>结果$x_{window}=x\in \mathbb{R}^{5d}$是一个列向量</li>
+</ul>
+<h3 id="Simplest-window-classifier-Softmax"><a href="#Simplest-window-classifier-Softmax" class="headerlink" title="Simplest window classifier: Softmax"></a>Simplest window classifier: Softmax</h3><p>对于$x=x_{window}$，我们可以使用与之前相同的softmax分类器</p>
+<p><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image15.png" alt></p>
+<ul>
+<li>如何更新向量？</li>
+<li>简而言之：求导和优化</li>
+</ul>
+<h3 id="Slightly-more-complex-Multilayer-Perceptron"><a href="#Slightly-more-complex-Multilayer-Perceptron" class="headerlink" title="Slightly more complex: Multilayer Perceptron"></a>Slightly more complex: Multilayer Perceptron</h3><ul>
+<li>在我们的softmax分类器中引入一个附加的非线性层。</li>
+<li>Multilayer Perceptron(mlp)是更复杂的神经系统的基本构件!</li>
+<li>假设我们要对中心词是否为一个地点，进行分类</li>
+<li>与word2vec类似，我们将遍历语料库中的所有位置。但这一次，它将受到监督，只有一些位置能够得到高分，在他们的中心有一个实际的NER Location的位置是“真实的”位置会获得高分<h3 id="Neural-Network-Feed-forward-Computation"><a href="#Neural-Network-Feed-forward-Computation" class="headerlink" title="Neural Network Feed-forward Computation"></a>Neural Network Feed-forward Computation</h3>使用神经激活$a$简单地给出一个非标准化的分数<script type="math/tex; mode=display">score(x)=U^Ta \in R</script>我们用一个三层神经网络计算一个窗口的得分<script type="math/tex; mode=display">s=score("museums in Paris are amazing”)</script><script type="math/tex; mode=display">s=U^Tf(Wx+b)</script><script type="math/tex; mode=display">x\in \mathbb{R}^{20 \times 1},W\in \mathbb{R}^{8 \times 20},U\in \mathbb{R}^{8 \times 1}</script><img src="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/image16.png" alt></li>
+</ul>
+<h3 id="Main-intuition-for-extra-layer"><a href="#Main-intuition-for-extra-layer" class="headerlink" title="Main intuition for extra layer"></a>Main intuition for extra layer</h3><p>中间层学习输入词向量之间的<strong>非线性交互</strong><br>例如：只有当“museum”是第一个向量时，“in”放在第二个位置才重要</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/" data-id="ck9myfqel0007ckv81p8x1dgv" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cs224n%E8%AF%BE%E7%A8%8B/" rel="tag">cs224n课程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nlp/" rel="tag">nlp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/30/Matrix%20Calculus%20and%20Backpropagation/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          04 Matrix Calculus and Backpropagation
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/30/Introduction%20and%20Word%20Vectors/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">01 Introduction and Word Vectors</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cs224n%E8%AF%BE%E7%A8%8B/" rel="tag">cs224n课程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nlp/" rel="tag">nlp</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/cs224n%E8%AF%BE%E7%A8%8B/" style="font-size: 10px;">cs224n课程</a> <a href="/tags/nlp/" style="font-size: 10px;">nlp</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/30/The%20probability%20of%20a%20sentence%20Recurrent%20Neural%20Networks%20and%20Language%20Models/">06 The probability of a sentence? Recurrent Neural Networks and Language Models</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/30/Linguistic%20Structure%20Dependency%20Parsing/">05 Linguistic Structure Dependency Parsing</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/30/Matrix%20Calculus%20and%20Backpropagation/">04 Matrix Calculus and Backpropagation</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/30/Word%20Window%20Classification,%20Neural%20Networks,%20and%20PyTorch/">03 Word Window Classification, Neural Networks, and PyTorch</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/30/Introduction%20and%20Word%20Vectors/">01 Introduction and Word Vectors</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>
