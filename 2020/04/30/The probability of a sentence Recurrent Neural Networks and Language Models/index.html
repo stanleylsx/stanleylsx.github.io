@@ -61,7 +61,7 @@ P(x^{(1)},...,x^{(T)})&=P(x^{(1)})\times P(x^{(2)}|x^{(1)})\times...\times P(x^{
 </ul>
 <p>我们需要一个神经结构，可以处理任何长度的输入</p>
 <h3 id="RNN-Language-Model"><a href="#RNN-Language-Model" class="headerlink" title="RNN Language Model"></a>RNN Language Model</h3><p><img src="/2020/04/30/The%20probability%20of%20a%20sentence%20Recurrent%20Neural%20Networks%20and%20Language%20Models/image07.png" alt></p>
-<p>RNN输入可以是任意长度，特别适合对顺序敏感的序列问题进行建模。对于$t$时刻的输入词$x^{(t)}$来说，首先把它转为词向量$e^{(t)}$作为RNN的输入，然后对于隐藏层，它的输入来自于$t$时刻的输入变换$W_ee^{(t)}$和上一时刻的隐藏层变换$W_hh^{(t-1)}，这两部分组合起来再做一个非线性变换，得到当前层的隐状态$h^{(t)}$，最后，隐状态再接一个softmax层，得到该时刻的输出概率分布 $\hat{y}^{(t)}$<br>整个网络中，不同时刻的权重矩阵$W$是共享的，不同的是不同时刻的输入$x^{(t)}$和隐状态$h^{(t)}$，词向量$e$可以是pre-trained得到的，然后固定不动了，也可以根据实际任务进行fine-tune；甚至可以完全随机，在实际任务中现场学习。最好还是用pre-trained的词向量，如果数据量很大的话，再考虑fine-tune  </p>
+<p>RNN输入可以是任意长度，特别适合对顺序敏感的序列问题进行建模。对于$t$时刻的输入词$x^{(t)}$来说，首先把它转为词向量$e^{(t)}$作为RNN的输入，然后对于隐藏层，它的输入来自于$t$时刻的输入变换$W_ee^{(t)}$和上一时刻的隐藏层变换$W_hh^{(t-1)}$，这两部分组合起来再做一个非线性变换，得到当前层的隐状态$h^{(t)}$，最后，隐状态再接一个softmax层，得到该时刻的输出概率分布$\hat{y}^{(t)}$<br>整个网络中，不同时刻的权重矩阵$W$是共享的，不同的是不同时刻的输入$x^{(t)}$和隐状态$h^{(t)}$，词向量$e$可以是pre-trained得到的，然后固定不动了，也可以根据实际任务进行fine-tune；甚至可以完全随机，在实际任务中现场学习。最好还是用pre-trained的词向量，如果数据量很大的话，再考虑fine-tune  </p>
 <p>RNN的<strong>优点</strong>：</p>
 <ul>
 <li>可以处理任意长度的输入</li>
