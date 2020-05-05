@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>08 Machine Translation, Sequence-to-sequence and Attention</title>
+      <link href="/2020/05/06/Machine%20Translation,%20Seq2Seq%20and%20Attention/"/>
+      <url>/2020/05/06/Machine%20Translation,%20Seq2Seq%20and%20Attention/</url>
+      
+        <content type="html"><![CDATA[<h2 id="to-be-continue…"><a href="#to-be-continue…" class="headerlink" title="to be continue…"></a>to be continue…</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> cs224n学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> cs224n课程 </tag>
+            
+            <tag> nlp </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>07 Vanishing Gradients and Fancy RNNs</title>
       <link href="/2020/05/05/Vanishing%20Gradients%20and%20Fancy%20RNNs/"/>
       <url>/2020/05/05/Vanishing%20Gradients%20and%20Fancy%20RNNs/</url>
