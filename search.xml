@@ -51,6 +51,10 @@
             
             <tag> nlp </tag>
             
+            <tag> RNN </tag>
+            
+            <tag> n-gram </tag>
+            
         </tags>
       
     </entry>
@@ -132,6 +136,8 @@
             
             <tag> nlp </tag>
             
+            <tag> ner </tag>
+            
         </tags>
       
     </entry>
@@ -159,6 +165,8 @@
             
             <tag> nlp </tag>
             
+            <tag> word2vec </tag>
+            
         </tags>
       
     </entry>
@@ -185,6 +193,8 @@
             <tag> cs224n课程 </tag>
             
             <tag> nlp </tag>
+            
+            <tag> word2vec </tag>
             
         </tags>
       
