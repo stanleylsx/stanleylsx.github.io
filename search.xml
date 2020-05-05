@@ -24,6 +24,10 @@
             
             <tag> nlp </tag>
             
+            <tag> LSTM </tag>
+            
+            <tag> GRU </tag>
+            
         </tags>
       
     </entry>
