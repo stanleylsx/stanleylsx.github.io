@@ -4,11 +4,11 @@
   
     
     <entry>
-      <title>09 Question Answering and the Default Final Project</title>
-      <link href="/2020/05/11/Question%20Answering%20and%20the%20Default%20Final%20Project/"/>
-      <url>/2020/05/11/Question%20Answering%20and%20the%20Default%20Final%20Project/</url>
+      <title>09 Question Answering, the Default Final Project, and an introduction to Transformer architectures</title>
+      <link href="/2020/05/12/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/"/>
+      <url>/2020/05/12/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h2 id="Motivation-Question-answering"><a href="#Motivation-Question-answering" class="headerlink" title="Motivation: Question answering"></a>Motivation: Question answering</h2><p>问答系统(Question Answering, QA)是指对检索到的文档进行阅读理解，抽取出能回答问题的答案</p><h2 id="Stanford-Question-Answering-Dataset-SQuAD"><a href="#Stanford-Question-Answering-Dataset-SQuAD" class="headerlink" title="Stanford Question Answering Dataset(SQuAD)"></a>Stanford Question Answering Dataset(SQuAD)</h2><p>2015~2016年，几个大规模QA标注数据集的发表，极大的推动了这个领域的发展。这其中比较有名的数据集是斯坦福大学发布的Stanford Question Answering Dataset(SQuAD)。</p><p><img src="/2020/05/12/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image01.png" alt></p><ul><li>文章是来自维基百科的一段文本，系统需要回答问题，在文章中找出答案</li><li>答案直接直接来自于文章，也就是提取式问答(给出答案所在的收尾位置之间的单词序列)</li><li>SQuAD由100k个examples构造而成</li></ul><p><img src="/2020/05/12/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image02.png" alt></p><p>为了增加数据集的难度，斯坦福后续推出升级版本SQuAD2.0数据集中增加了没有答案的问题，可以理解为假问题，对系统造成干扰。此时就要求系统判断这个问题能否从文章描述中获得答案，如果没有答案的话，就不输出任何回答<No answer\></No></p><h2 id="Stanford-Attentive-Reader"><a href="#Stanford-Attentive-Reader" class="headerlink" title="Stanford Attentive Reader"></a>Stanford Attentive Reader</h2><h3 id="Stanford-Attentive-Reader-1"><a href="#Stanford-Attentive-Reader-1" class="headerlink" title="Stanford Attentive Reader++"></a>Stanford Attentive Reader++</h3><h2 id="BiDAF-Bi-Directional-Attention-Flow-for-Machine-Comprehension"><a href="#BiDAF-Bi-Directional-Attention-Flow-for-Machine-Comprehension" class="headerlink" title="BiDAF: Bi-Directional Attention Flow for Machine Comprehension"></a>BiDAF: Bi-Directional Attention Flow for Machine Comprehension</h2><h2 id="Recent-more-advanced-architectures"><a href="#Recent-more-advanced-architectures" class="headerlink" title="Recent, more advanced architectures"></a>Recent, more advanced architectures</h2><h3 id="Dynamic-CoattentionNetworks-for-Question-Answering"><a href="#Dynamic-CoattentionNetworks-for-Question-Answering" class="headerlink" title="Dynamic CoattentionNetworks for Question Answering"></a>Dynamic CoattentionNetworks for Question Answering</h3><h3 id="Coattention-Encoder"><a href="#Coattention-Encoder" class="headerlink" title="Coattention Encoder"></a>Coattention Encoder</h3><h3 id="FusionNet-Huang-Zhu-Shen-Chen-2017"><a href="#FusionNet-Huang-Zhu-Shen-Chen-2017" class="headerlink" title="FusionNet(Huang, Zhu, Shen, Chen 2017)"></a>FusionNet(Huang, Zhu, Shen, Chen 2017)</h3><h3 id="Multi-level-inter-attention"><a href="#Multi-level-inter-attention" class="headerlink" title="Multi-level inter-attention"></a>Multi-level inter-attention</h3><h2 id="ELMo-and-BERT-preview"><a href="#ELMo-and-BERT-preview" class="headerlink" title="ELMo and BERT preview"></a>ELMo and BERT preview</h2><p>此部分内容之前已经在<a href="https://blog.csdn.net/sunhua93/article/details/102764783" target="_blank" rel="noopener">彻底搞懂BERT</a>文章中学习过</p>]]></content>
       
       
       <categories>
@@ -23,6 +23,8 @@
             <tag> cs224n课程 </tag>
             
             <tag> nlp </tag>
+            
+            <tag> QA </tag>
             
         </tags>
       
