@@ -20,9 +20,11 @@
       
         <tags>
             
-            <tag> 正则化 </tag>
-            
             <tag> 拉格朗日乘子法 </tag>
+            
+            <tag> L1正则化 </tag>
+            
+            <tag> L2正则化 </tag>
             
         </tags>
       
