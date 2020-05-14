@@ -51,7 +51,7 @@ d^{*}=\underset{\alpha,\beta;\beta_j\geq0}{max}\underset{x}{min}L(x,\alpha,\beta
 </ul>
 <p>强对偶是一个非常好的性质，因为在强对偶成立的情况下，可以通过求解对偶问题来得到原始问题的解，在SVM中就是这样做的。当然并不是所有的对偶问题都满足强对偶性，在SVM中是直接假定了强对偶性的成立，其实只要满足一些条件，强对偶性是成立的，比如说Slater条件与KKT条件。</p>
 <blockquote>
-<p><strong>Slater条件</strong>:对于原始问题及其对偶问题，假设函数$f(x)$和$g_j(x)$是凸函数，$h_i(x)=0$为仿射函数，且不等式约束$g_j(x)$是严格可行的(即存在$x$，对所有$j$有$g_j(x)&lt;0$)，则存在$x^{<em>},\alpha^{</em>},\beta^{<em>}$，使$x$是原始问题的解，$\alpha^{</em>},\beta^{*}$是对偶问题的解，并且:</p>
+<p><strong>Slater条件</strong>:对于原始问题及其对偶问题，假设函数$f(x)$和$g_j(x)$是凸函数，$h_i(x)=0$为仿射函数，且不等式约束$g_j(x)$是严格可行的(即存在$x$，对所有$j$有$g_j(x)&lt;0$)，则存在$x^*,\alpha^*,\beta^*$，使$x$是原始问题的解，$\alpha^*,\beta^*$是对偶问题的解，并且:</p>
 <script type="math/tex; mode=display">p^{*}=d^{*}=L(x^{*},\alpha^{*},\beta^{*})</script><p>也就是说如果原始问题是凸优化问题并且满足 Slater 条件的话，那么强对偶性成立。需要注意的是，这里只是指出了强对偶成立的一种情况，并不是唯一的情况。</p>
 <blockquote>
 <p> 假如有$\vec{x}\in\mathbb{R}^n,\vec{b}\in\mathbb{R}^m$，矩阵$A_{m\times n}$，那么：</p>
