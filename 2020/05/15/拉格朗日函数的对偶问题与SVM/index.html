@@ -46,8 +46,8 @@ s.t. \quad \beta_j\geq0,j=1,2...,m
 \underset{\alpha,\beta;\beta_j\geq0}{max}D(\alpha,\beta)=d^{*} \tag{9}</script><p>若原始问题与对偶问题都有最优解，则：</p>
 <script type="math/tex; mode=display">
 d^{*}=\underset{\alpha,\beta;\beta_j\geq0}{max}\underset{x}{min}L(x,\alpha,\beta) \leq \underset{x}{min}\underset{\alpha,\beta;\beta_j\geq0}{max}L(x,\alpha,\beta)=p^{*} \tag{10}</script><ul>
-<li>当$d^{<em>}\leq p^{</em>}$，称为“弱对偶性(weak duality)”成立，对于所有优化问题都成立，即使原始问题非凸；</li>
-<li>当$d^{<em>}=p^{</em>}$，则称为“强对偶性(strong duality)”成立。</li>
+<li>当$d^*\leq p^*$，称为“弱对偶性(weak duality)”成立，对于所有优化问题都成立，即使原始问题非凸；</li>
+<li>当$d^*=p^*$，则称为“强对偶性(strong duality)”成立。</li>
 </ul>
 <p>强对偶是一个非常好的性质，因为在强对偶成立的情况下，可以通过求解对偶问题来得到原始问题的解，在SVM中就是这样做的。当然并不是所有的对偶问题都满足强对偶性，在SVM中是直接假定了强对偶性的成立，其实只要满足一些条件，强对偶性是成立的，比如说Slater条件与KKT条件。</p>
 <blockquote>
