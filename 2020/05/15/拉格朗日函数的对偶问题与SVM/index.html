@@ -19,7 +19,7 @@
 \\
 s.t.\quad h_i(x)=0,i=1,2,...,m
 \\
-s.t.\quad g_j(x)\leq0,j=1,2,...,n \tag{1}</script><p>文章<a href="https://stanleylsx.github.io/2020/05/13/%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E4%B9%98%E5%AD%90%E6%B3%95%E4%B8%8EL1%E5%92%8CL2%E6%AD%A3%E5%88%99%E9%A1%B9/" target="_blank" rel="noopener">拉格朗日乘子法与L1和L2正则项</a>中给出了它的拉格朗日方程和对应的KTT条件： </p>
+s.t.\quad g_j(x)\leq0,j=1,2,...,n \tag{1}</script><p>文章<a href="https://stanleylsx.github.io/2020/05/13/%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E4%B9%98%E5%AD%90%E6%B3%95%E4%B8%8EL1%E5%92%8CL2%E6%AD%A3%E5%88%99%E9%A1%B9/" target="_blank" rel="noopener">拉格朗日乘子法与L1和L2正则项</a>中给出了它的拉格朗日方程： </p>
 <script type="math/tex; mode=display">
 L(x,\alpha,\beta)=f(x)+\sum^m_{i=1}\alpha_ih_i(x)+\sum^n_{j=1}\beta_jg_j(x) \tag{2}</script><p>$\alpha_i$和$\beta_j$为拉格朗日乘子，根据不等式约束的拉格朗日乘子条件知道$\beta_j\geq0$。  </p>
 <p>对于(2)式，假设给定一个不符合原始问题(1)约束条件的$x$(即存在$i$使得$h_i(x)\neq0$，或者存在$j$使得$g_j(x)&gt;0$)，若存在$h_i(x)\neq0$，可令$\alpha_i \rightarrow\infty$，若存在$g_j(x)&gt;0$，可令$\beta_j \rightarrow\infty$，则一定有：</p>
@@ -38,7 +38,7 @@ L(x,\alpha,\beta)=f(x)+\sum^m_{i=1}\alpha_ih_i(x)+\sum^n_{j=1}\beta_jg_j(x) \tag
 <script type="math/tex; mode=display">
 D(\alpha,\beta)=\underset{x}{min}L(x,\alpha,\beta)  \tag{7}</script><p>有了对偶函数就可给出对偶问题了，与原始问题的形式非常类似，只是把min和max交换了一下，加上限制条件：</p>
 <script type="math/tex; mode=display">
-\underset{\alpha,\beta;\alpha_i\geq0}{max}D(\alpha,\beta)=\underset{\alpha,\beta;\beta_j\geq0}{max}\underset{x}{min}L(x,\alpha,\beta) 
+\underset{\alpha,\beta;\beta_j\geq0}{max}D(\alpha,\beta)=\underset{\alpha,\beta;\beta_j\geq0}{max}\underset{x}{min}L(x,\alpha,\beta) 
 \\
 s.t. \quad \beta_j\geq0,j=1,2...,m
 \tag{8}</script><p>$\alpha$和$\beta$称为对偶变量，定义对偶函数的最优值</p>
