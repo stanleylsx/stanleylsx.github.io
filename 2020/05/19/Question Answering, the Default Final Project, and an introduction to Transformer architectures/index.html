@@ -1,0 +1,121 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="09 Question Answering, the Default Final Project, and an introduction to Transformer architectures"><meta name="keywords" content="cs224n课程,nlp,QA"><meta name="author" content="Stanleylsx"><meta name="copyright" content="Stanleylsx"><title>09 Question Answering, the Default Final Project, and an introduction to Transformer architectures | LSXのBlog</title><link rel="shortcut icon" href="/umbrella.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3b6aa10c68000f1e94f4d4b68f24e650";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://v1.hitokoto.cn/?encode=js&amp;charset=utf-8&amp;select=.footer_custom_text" defer></script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
+<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
+<script src="\assets\js\Meting.min.js" class="meting-script-marker"></script>
+</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Motivation-Question-answering"><span class="toc-number">1.</span> <span class="toc-text">Motivation: Question answering</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stanford-Question-Answering-Dataset-SQuAD"><span class="toc-number">2.</span> <span class="toc-text">Stanford Question Answering Dataset(SQuAD)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stanford-Attentive-Reader"><span class="toc-number">3.</span> <span class="toc-text">Stanford Attentive Reader</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Stanford-Attentive-Reader-1"><span class="toc-number">3.1.</span> <span class="toc-text">Stanford Attentive Reader++</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BiDAF-Bi-Directional-Attention-Flow-for-Machine-Comprehension"><span class="toc-number">4.</span> <span class="toc-text">BiDAF: Bi-Directional Attention Flow for Machine Comprehension</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Recent-more-advanced-architectures"><span class="toc-number">5.</span> <span class="toc-text">Recent, more advanced architectures</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Dynamic-CoattentionNetworks-for-Question-Answering"><span class="toc-number">5.1.</span> <span class="toc-text">Dynamic CoattentionNetworks for Question Answering</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Coattention-Encoder"><span class="toc-number">5.2.</span> <span class="toc-text">Coattention Encoder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FusionNet"><span class="toc-number">5.3.</span> <span class="toc-text">FusionNet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-level-inter-attention"><span class="toc-number">5.4.</span> <span class="toc-text">Multi-level inter-attention</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ELMo-and-BERT-preview"><span class="toc-number">6.</span> <span class="toc-text">ELMo and BERT preview</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#补充：如何使用Bert做基于阅读理解的信息抽取"><span class="toc-number">7.</span> <span class="toc-text">补充：如何使用Bert做基于阅读理解的信息抽取</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">8.</span> <span class="toc-text">Reference</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/miao.jpg"></div><div class="author-info__name text-center">Stanleylsx</div><div class="author-info__description text-center">达拉崩巴斑得贝迪卜多比鲁翁</div><div class="follow-button"><a href="https://github.com/stanleylsx" target="_blank" rel="noopener">Follow Me</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">12</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">20</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div class="plain" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">LSXのBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="/gallery">相册</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div></div><div class="layout" id="content-inner"><article id="post"><div class="plain" id="post-title">09 Question Answering, the Default Final Project, and an introduction to Transformer architectures</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-05-19</time><span class="post-meta__separator">|</span><i class="fa fa-inbox" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/cs224n%E5%AD%A6%E4%B9%A0/"> cs224n学习</a><span class="post-meta__separator">|</span><span class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">1.4k</span><span class="post-meta__separator">|</span><span>阅读时长: 4 分钟</span></span></div><div class="article-container" id="post-content">
+    <div id="aplayer-YvYCcmEB" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="298213" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="true" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555" data-volume="0.5"></div>
+<h2 id="Motivation-Question-answering"><a href="#Motivation-Question-answering" class="headerlink" title="Motivation: Question answering"></a>Motivation: Question answering</h2><p>问答系统(Question Answering, QA)是指对检索到的文档进行阅读理解，抽取出能回答问题的答案</p>
+<h2 id="Stanford-Question-Answering-Dataset-SQuAD"><a href="#Stanford-Question-Answering-Dataset-SQuAD" class="headerlink" title="Stanford Question Answering Dataset(SQuAD)"></a>Stanford Question Answering Dataset(SQuAD)</h2><p>2015~2016年，几个大规模QA标注数据集的发表，极大的推动了这个领域的发展。这其中比较有名的数据集是斯坦福大学发布的Stanford Question Answering Dataset(SQuAD)。</p>
+<p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image01.png" alt></p>
+<ul>
+<li>文章是来自维基百科的一段文本，系统需要回答问题，在文章中找出答案</li>
+<li>答案直接直接来自于文章，也就是提取式问答(给出答案所在的收尾位置之间的单词序列)</li>
+<li>SQuAD由100k个examples构造而成</li>
+</ul>
+<p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image02.png" alt></p>
+<p>为了增加数据集的难度，斯坦福后续推出升级版本SQuAD2.0数据集中增加了没有答案的问题，可以理解为假问题，对系统造成干扰。此时就要求系统判断这个问题能否从文章描述中获得答案，如果没有答案的话，就不输出任何回答No Answer。</p>
+<h2 id="Stanford-Attentive-Reader"><a href="#Stanford-Attentive-Reader" class="headerlink" title="Stanford Attentive Reader"></a>Stanford Attentive Reader</h2><p>这是一个基于SQuAD数据集开发的QA架构，它比较轻量级，性能一般，常被用作解决QA问题的一个baseline模型。</p>
+<p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/_posts/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image03.png" alt></p>
+<p>对问题Q的每个词进行embedding得到词向量，然后使用双向LSTM去抽取句子的特征，把正向和反向的LSTM的最后一个隐状态拼接起来，作为对整个句子的表征$q$。  </p>
+<p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/_posts/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image04.png" alt></p>
+<p>SQuAD的问题答案在P中，模型只需要找到对应答案在P中的位置就行(span)。我们对P也使用和Q一样的处理方式得到P中每个词的表征向量$\tilde{p}_i$，然后使用两次注意力机制，用$q$查询集合$p=[\tilde{p}_1,\tilde{p}_2,…,\tilde{p}_n]$，得到答案在P中的起始位置$\alpha_i$和结束位置$\tilde{\alpha}_i’$。</p>
+<p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/_posts/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image05.png" alt></p>
+<blockquote>
+<p>因为$q$和$\tilde{p}_i$的维度不一样无法直接通过点积计算注意力得分，所以引入参数$W$</p>
+<h3 id="Stanford-Attentive-Reader-1"><a href="#Stanford-Attentive-Reader-1" class="headerlink" title="Stanford Attentive Reader++"></a>Stanford Attentive Reader++</h3></blockquote>
+<p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/_posts/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image06.png" alt></p>
+<p>相对于上一个模型，这个模型做了两个改变，对于问题Q的表征，$q$不仅包含了双向LSTM首尾的两个输出的隐状态，它使用了$w$这个可学习的变量描述整个问题所有隐状态的加权平均，并且加深网络层数到3层；对于P部分的表征，原来的输入仅仅包含词向量，它引进了更多的语言特征，如POS标签、NER标签、词频等。这个++版本的改进相对于前一个有不少的提升。</p>
+<h2 id="BiDAF-Bi-Directional-Attention-Flow-for-Machine-Comprehension"><a href="#BiDAF-Bi-Directional-Attention-Flow-for-Machine-Comprehension" class="headerlink" title="BiDAF: Bi-Directional Attention Flow for Machine Comprehension"></a>BiDAF: Bi-Directional Attention Flow for Machine Comprehension</h2><p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/_posts/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image07.png" alt></p>
+<p>这个QA模型对于问题Q和描述P的建模除了引入它们的词向量，还引入了字符级别的特征，并且，在做attention时，做了双向的attention，即除了问题对描述的注意力，还有描述对问题的注意力。</p>
+<h2 id="Recent-more-advanced-architectures"><a href="#Recent-more-advanced-architectures" class="headerlink" title="Recent, more advanced architectures"></a>Recent, more advanced architectures</h2><p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/_posts/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image08.png" alt></p>
+<p>之后的研究工作，大家发现，对QA系统中attention设计的改进可以获得很多的提升。</p>
+<h3 id="Dynamic-CoattentionNetworks-for-Question-Answering"><a href="#Dynamic-CoattentionNetworks-for-Question-Answering" class="headerlink" title="Dynamic CoattentionNetworks for Question Answering"></a>Dynamic CoattentionNetworks for Question Answering</h3><p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/_posts/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image09.png" alt></p>
+<p>这篇文章认为一个全面的QA模型需要更多的相互依赖，也就意味着更多更复杂的attention需要被引入。</p>
+<h3 id="Coattention-Encoder"><a href="#Coattention-Encoder" class="headerlink" title="Coattention Encoder"></a>Coattention Encoder</h3><p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/_posts/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image10.png" alt></p>
+<p>Coattention Encoder包括两级注意力的计算，首先对D和Q之间产生一个互注意力层(Coattention layer)，然后对这个互注意力层和问题Q之间再次进行attention。</p>
+<h3 id="FusionNet"><a href="#FusionNet" class="headerlink" title="FusionNet"></a>FusionNet</h3><p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/_posts/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image11.png" alt><br>多层感知机(Multi-layer Perceptron,MLP)，是模型结构相对简单但在工业界运用比较广泛的深度模型。MLP模型是包含多个全连接隐藏层的前向反馈模型，它计算注意力分数一种方式是(维度不一样，引入$W$参数)： </p>
+<script type="math/tex; mode=display">
+score(c_i,q_j)=s^Ttanh(W_1c_i+W_2q_j)</script><p>它改成了双线性形式：</p>
+<script type="math/tex; mode=display">
+score(c_i,q_j)=c_i^TWq_j
+\\
+score(c_i,q_j)=c_i^TU^TVq_j
+\\
+score(c_i,q_j)=c_i^TW^TDWq_j
+\\
+score(c_i,q_j)=Relu(c_i^TW^T)DRelu(Wq_j)</script><p>这样的attention消耗较少的空间，且非线性。</p>
+<h3 id="Multi-level-inter-attention"><a href="#Multi-level-inter-attention" class="headerlink" title="Multi-level inter-attention"></a>Multi-level inter-attention</h3><p>这部分引入了self-attention在上下文中做更多的inter-attention。现如今QA问题的比较好的性能都是由Bert给出，由此引进了预训练模型。</p>
+<h2 id="ELMo-and-BERT-preview"><a href="#ELMo-and-BERT-preview" class="headerlink" title="ELMo and BERT preview"></a>ELMo and BERT preview</h2><p>此部分内容之前已经在<a href="https://blog.csdn.net/sunhua93/article/details/102764783" target="_blank" rel="noopener">彻底搞懂BERT</a>文章中学习过</p>
+<h2 id="补充：如何使用Bert做基于阅读理解的信息抽取"><a href="#补充：如何使用Bert做基于阅读理解的信息抽取" class="headerlink" title="补充：如何使用Bert做基于阅读理解的信息抽取"></a>补充：如何使用Bert做基于阅读理解的信息抽取</h2><p>就像前面介绍的，在BERT出来之前，机器阅读理解主要用LSTM等特征抽取分别对Paragraph(P)和Question(Q)进行表征，抽取特征。再将二者的特征进行一些运算，得到相应的输出表征。</p>
+<p><img src="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/_posts/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/image12.jpg" alt></p>
+<p>如上图所示，展示了如何用Bert来做信息抽取任务的结构图，注意以下几点即可：  </p>
+<ul>
+<li>将Question和Paragraph分别作为BERT的text1和text2输入。</li>
+<li>start/end span在Paragraph对应的输出位置表示。</li>
+</ul>
+<p>通常输出会通过2个dense网络，接到start输出和end输出序列。  </p>
+<blockquote>
+<p>假设Paragraph为“周杰伦出生于台湾”，Question为“周杰伦出生于哪里？”，则laebl为：start[0,0,0,0,0,1,0]，end[0,0,0,0,0,0,1]。  </p>
+</blockquote>
+<p>将上述start输出和end输出序列接一个sigmod层，然后用binary_crossentropy函数即可进行训练。<br>如果想要输出一个Answer是否正确的概率，可用将[CLS]的输出表征利用起来。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://mp.weixin.qq.com/s/edv0IEb-1TsJsuocED7gFQ" target="_blank" rel="noopener">如何利用BERT来做基于阅读理解的信息抽取</a></p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Stanleylsx</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://yoursite.com/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/">http://yoursite.com/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://yoursite.com">LSXのBlog</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cs224n%E8%AF%BE%E7%A8%8B/">cs224n课程</a><a class="post-meta__tags" href="/tags/nlp/">nlp</a><a class="post-meta__tags" href="/tags/QA/">QA</a></div><div class="social-share pull-right" data-disabled="google,facebook,twitter,qzone,douban,tencent,linkedin,diandian"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><nav id="pagination"><div class="next-post pull-right"><a href="/2020/05/15/%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E5%87%BD%E6%95%B0%E7%9A%84%E5%AF%B9%E5%81%B6%E9%97%AE%E9%A2%98%E4%B8%8ESVM/"><span>拉格朗日函数的对偶问题与SVM</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="vcomment"></div><script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'Y3GMXKvryJw9CpeduEyC6hh5-9Nh9j0Va',
+  appKey:'9Jc79wdsIqJQfFj1gmJh2vHj',
+  placeholder:'Just go go',
+  avatar:'mm',
+  guest_info:guest_info,
+  pageSize:'10',
+  lang: 'zh-cn'
+})</script></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2020 By Stanleylsx</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody" target="_blank" rel="noopener"><span>Melody</span></a></div><div class="footer_custom_text">hitokoto</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
