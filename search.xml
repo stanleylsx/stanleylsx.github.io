@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>10 ConvNets for NLP</title>
+      <link href="/2020/05/21/ConvNets%20for%20NLP/"/>
+      <url>/2020/05/21/ConvNets%20for%20NLP/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script>    <div id="aplayer-SAMjFPZD" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="5264843" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555" data-volume="0.5"></div><h2 id="From-RNNs-to-Convolutional-Neural-Nets"><a href="#From-RNNs-to-Convolutional-Neural-Nets" class="headerlink" title="From RNNs to Convolutional Neural Nets"></a>From RNNs to Convolutional Neural Nets</h2><p>关于CNN的基础知识可以在很多地方学习，这篇文章主要学习卷积在NLP中的用法。</p><h3 id="A-1D-convolution-for-text"><a href="#A-1D-convolution-for-text" class="headerlink" title="A 1D convolution for text"></a>A 1D convolution for text</h3><p>首先，我们来看下最简单的单通道下，卷积核kernal=3的情况，怎么计算结果，假设有一个句子:tentative deal reached to keep government open，我们把这句话每一个单词使用维度为4的向量进行表征：</p><p><img src="/2020/05/21/ConvNets%20for%20NLP/image01.png" alt></p><p>接下来使用一个kernal为3的卷积核对其在每一个维度的纵向上进行卷积操作：</p><p><img src="/2020/05/21/ConvNets%20for%20NLP/image02.png" alt></p><p>那么它的计算方式如下，首先对tentative、deal、reached(t,d,r)进行卷积，卷积过程：<br>在第一维度：</p><script type="math/tex; mode=display">0.2*3+0.5*(-1)+(-0.1)*1=0</script><p>在第二维度：</p><script type="math/tex; mode=display">0.1*1+0.2*2+(-0.3)*1=0.2</script><p>在第三维度：</p><script type="math/tex; mode=display">(-0.3)*2+(-0.3)*1+(-0.2)*(-1)=-0.7</script><p>在第四维度：</p><script type="math/tex; mode=display">0.4*(-3)+(-0.1)*(-3)+0.4*1=-0.5</script><p>四个维度加起来组成第一步卷积结果:</p><script type="math/tex; mode=display">0+0.2-0.7-0.5=-1.0</script><p>因为卷积步长为1，因此接下来对deal、reached、to(d,r,t)同样的方法操作，依次类推得出最后的结果：</p><p><img src="/2020/05/21/ConvNets%20for%20NLP/image03.png" alt></p><h3 id="1D-convolution-for-text-with-padding"><a href="#1D-convolution-for-text-with-padding" class="headerlink" title="1D convolution for text with padding"></a>1D convolution for text with padding</h3><p>当出现有padding的时候，padding的维度的值都为0，卷积的方法和上述一样：</p><p><img src="/2020/05/21/ConvNets%20for%20NLP/image04.png" alt></p><h3 id="3-channel-1D-convolution-with-padding-1"><a href="#3-channel-1D-convolution-with-padding-1" class="headerlink" title="3 channel 1D convolution with padding = 1"></a>3 channel 1D convolution with padding = 1</h3><p>如果是多通道的(此处为3通道)，那么就会对应多个卷积核，操作方法其实跟上述一样，只不过求的时候分别求出3个卷积核的结果，然后输出就是三列(对应3个通道)</p><p><img src="/2020/05/21/ConvNets%20for%20NLP/image05.png" alt></p><h3 id="conv1d-padded-with-max-pooling-over-time"><a href="#conv1d-padded-with-max-pooling-over-time" class="headerlink" title="conv1d, padded with max pooling over time"></a>conv1d, padded with max pooling over time</h3><p>接下来就是进行pooling操作，对于上面的3通道卷积核得出的结果进行最大值池化之后的结果如下：</p><p><img src="/2020/05/21/ConvNets%20for%20NLP/image06.png" alt></p><p>筛选出每个通道的最大值。</p><h3 id="conv1d-padded-with-avepooling-over-time"><a href="#conv1d-padded-with-avepooling-over-time" class="headerlink" title="conv1d, padded with avepooling over time"></a>conv1d, padded with avepooling over time</h3><p>对于上面的3通道卷积核得出的结果进行平均值池化之后的结果如下：</p><p><img src="/2020/05/21/ConvNets%20for%20NLP/image07.png" alt></p><p>求一下每个通道的平均值。</p><h3 id="Other-less-useful-notions-stride-2"><a href="#Other-less-useful-notions-stride-2" class="headerlink" title="Other less useful notions: stride = 2"></a>Other less useful notions: stride = 2</h3><p>如果卷积核的步长为2，即stride=2，结果如下：</p><p><img src="/2020/05/21/ConvNets%20for%20NLP/image08.png" alt></p><p>先求∅,tentative,deal(∅,t,d)，接下来跨越一个单词求deal,reached,to(d,r,t)。</p><h2 id="Single-Layer-CNN-for-Sentence-Classification"><a href="#Single-Layer-CNN-for-Sentence-Classification" class="headerlink" title="Single Layer CNN for Sentence Classification"></a>Single Layer CNN for Sentence Classification</h2><p>课程里面给了一个CNN在NLP的一个经典模型，TextCNN，并阐述了它进行电影评论数据集的情感分类过程。<br>它使用了多个不同size的卷积核提取句子里的信息，更好的捕获句子里面的局部相关性。</p><p><img src="/2020/05/21/ConvNets%20for%20NLP/image09.png" alt></p><p>上图是宏观上的模型原理图，其中的操作可以看下文章前面的内容。</p><p><img src="/2020/05/21/ConvNets%20for%20NLP/image10.png" alt></p><p>最左边是一个7行5列的矩阵，它是句子I like this movie very much !的embedding(可以来自于word2vec也可以是预训练模型输出的静态词向量，也可以是预训练模型经过fine-tunning出来的词向量)，每一行都是对应的词向量，向量维度为5。接下来，把它经过size分别为2，3和5的卷积核，并且对应两个通道，总共就有6个卷积核。接下来进行max pooling，不同长度的句子经过池化之后得到了等长的向量表征。最后接一层全连接的softmax层，输出每个类别的概率。</p><h2 id="Model-comparison-Our-growing-toolkit"><a href="#Model-comparison-Our-growing-toolkit" class="headerlink" title="Model comparison: Our growing toolkit"></a>Model comparison: Our growing toolkit</h2><p>目前已经学到的NLP工具箱：</p><ul><li>词袋模型：对于一个句子，简单的把所有词的词向量进行平均，也能取得不错的baseline效果</li><li>基于滑动窗口的模型：对于POS、NER等不需要很长的上下文信息的问题来说，效果不错</li><li>CNN：对分类问题效果很好，容易在GPU上并行，所以效率很高</li><li>RNN：对于NLP问题来说，符合认知，对分类问题效果不是很好（如果只用最后一个隐状态的话），加上Attention性能提升明显，特别适合序列标注、语言模型等序列问题</li></ul><h3 id="Batch-Normalization-BatchNorm"><a href="#Batch-Normalization-BatchNorm" class="headerlink" title="Batch Normalization(BatchNorm)"></a>Batch Normalization(BatchNorm)</h3><p>Batch Normalization是一个在神经网络训练中很重要的手段，可以学习<a href="https://www.cnblogs.com/guoyaohua/p/8724433.html" target="_blank" rel="noopener">【深度学习】深入理解Batch Normalization批标准化</a>这篇文章。</p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.cnblogs.com/guoyaohua/p/8724433.html" target="_blank" rel="noopener">【深度学习】深入理解Batch Normalization批标准化</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> cs224n学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> cs224n课程 </tag>
+            
+            <tag> nlp </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>09 Question Answering, the Default Final Project, and an introduction to Transformer architectures</title>
       <link href="/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/"/>
       <url>/2020/05/19/Question%20Answering,%20the%20Default%20Final%20Project,%20and%20an%20introduction%20to%20Transformer%20architectures/</url>
