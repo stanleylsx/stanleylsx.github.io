@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="11 Information from parts of words (Subword Models)"><meta name="keywords" content="cs224n课程,nlp"><meta name="author" content="Stanleylsx"><meta name="copyright" content="Stanleylsx"><title>11 Information from parts of words (Subword Models) | LSXのBlog</title><link rel="shortcut icon" href="/umbrella.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3b6aa10c68000f1e94f4d4b68f24e650";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://v1.hitokoto.cn/?encode=js&amp;charset=utf-8&amp;select=.footer_custom_text" defer></script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
+<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
+<script src="\assets\js\Meting.min.js" class="meting-script-marker"></script>
+</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Purely-character-level-models"><span class="toc-number">1.</span> <span class="toc-text">Purely character-level models</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sub-word-models-two-trends"><span class="toc-number">2.</span> <span class="toc-text">Sub-word models: two trends</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Byte-Pair-Encoding"><span class="toc-number">2.1.</span> <span class="toc-text">Byte Pair Encoding</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Wordpiece-Sentencepiece-model"><span class="toc-number">2.2.</span> <span class="toc-text">Wordpiece&#x2F;Sentencepiece model</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hybrid-NMT"><span class="toc-number">2.3.</span> <span class="toc-text">Hybrid NMT</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FastText-embeddings"><span class="toc-number">3.</span> <span class="toc-text">FastText embeddings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">4.</span> <span class="toc-text">Reference</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/miao.jpg"></div><div class="author-info__name text-center">Stanleylsx</div><div class="author-info__description text-center">达拉崩巴斑得贝迪卜多比鲁翁</div><div class="follow-button"><a href="https://github.com/stanleylsx" target="_blank" rel="noopener">Follow Me</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">14</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">20</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(http://ww1.sinaimg.cn/large/0067fiZ7ly1g1cuf0dr09j31hc0u049j.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">LSXのBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="/gallery">相册</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">11 Information from parts of words (Subword Models)</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-05-24</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/cs224n%E5%AD%A6%E4%B9%A0/">cs224n学习</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">1.3k</span><span class="post-meta__separator">|</span><span>阅读时长: 4 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content">
+    <div id="aplayer-OulsPsVd" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="493735012" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555" data-volume="0.5"></div>
+<h2 id="Purely-character-level-models"><a href="#Purely-character-level-models" class="headerlink" title="Purely character-level models"></a>Purely character-level models</h2><p>对于英文来说，文字的粒度从细到粗依次是字符(character)，子字符(subword)，单词(word)，character和word都很好理解，subword相当于英文中的词根、前缀、后缀等，它们都是有含义的。对于中文来说，只有两层，character和subword是同一层，表示单个的字，而word表示词语。<br>之前介绍的基于word的模型，存在out of vocabulary(OOV，未登录词)的问题。以英文为例，现存的英文单词数量太多了，随便加个前缀、后缀，变个时态什么的都变成新的单词了，所以英文单词的词典数量特别大，而且有很多低频稀疏词。很多模型在训练时都会去掉低频词，只保留高频词。那么这就存在一个问题，如果预测时遇到未登录词，则模型不认识，出现OOV的问题。 </p>
+<p><img src="/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/image01.png" alt></p>
+<p>为了解决OOV问题，一开始用的是Purely character-level models，对英文来讲，直接计算26个字母的embedding向量，每个词由其字母的embedding拼接或者求平均得到。在以字符作为输入和输出的机器翻译系统中，这种纯基于字符级别的模型效果并没有比比原来基于word级别的模型效果好多少，且因为序列长度变为原来的数倍带来了更多的计算压力，而且梯度消失(爆炸)的问题也会更严重。</p>
+<h2 id="Sub-word-models-two-trends"><a href="#Sub-word-models-two-trends" class="headerlink" title="Sub-word models: two trends"></a>Sub-word models: two trends</h2><p><img src="/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/image02.png" alt></p>
+<p>人们想到两种使用subword办法解决OOV问题，第一种模型结构和word模型完全一样，只不过把word换成了subword；第二种是word和character的混合模型。</p>
+<h3 id="Byte-Pair-Encoding"><a href="#Byte-Pair-Encoding" class="headerlink" title="Byte Pair Encoding"></a>Byte Pair Encoding</h3><p>使用第一种模型就需要得到subword，比如一个单词unbelievable，需要找出un，able和believ(e)，如果对每一个单词都采用这种办法去分割会非常麻烦，可以引入BPE算法解决这个问题，此处引入文章<a href="https://zhuanlan.zhihu.com/p/38130825" target="_blank" rel="noopener">一分钟搞懂的算法之BPE算法</a>。</p>
+<blockquote>
+<p>BPE，(byte pair encoder)字节对编码，也可以叫做digram coding双字母组合编码，主要目的是为了数据压缩，算法描述为字符串里频率最常见的一对字符被一个没有在这个字符中出现的字符代替的层层迭代过程。具体在下面描述。该算法首先被提出是在Philip Gage的C Users Journal的 1994年2月的文章“A New Algorithm for Data Compression”。<br>比如我们想编码：aaabdaaabac，我们会发现这里的aa出现的词数最高(我们这里只看两个字符的频率)，那么用这里没有的字符Z来替代aa：ZabdZabac，此时，又发现ab出现的频率最高，那么同样的，Y来代替ab：ZYdZYac，同样的，ZY出现的频率大，我们用X来替代ZY：XdXac，最后，连续两个字符的频率都为1了，也就结束了。解码的时候，就按照相反的顺序更新替换即可。  </p>
+</blockquote>
+<p>第一种模型就是用BPE算法来得到高频subword的。一开始的词表种只有V={l,o,w,e,r,n,w,s,t,i,d}，通过算法，我们会一步步将es，est，lo都加入到词表种，这样对于词典中未出现的一个单词west，就可以通过V中的w，est两个subword构成。这样的操作就把词典中的词汇扩大了。得到高频的subword作为V之后，后续在进行NLP任务时，encoder时查一下V，把char pair替换为新字符；decoder时查一下V，把新字符替换回原来的char pair。</p>
+<p><img src="/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/image03.png" alt><br><img src="/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/image04.png" alt><br><img src="/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/image05.png" alt><br><img src="/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/image06.png" alt></p>
+<h3 id="Wordpiece-Sentencepiece-model"><a href="#Wordpiece-Sentencepiece-model" class="headerlink" title="Wordpiece/Sentencepiece model"></a>Wordpiece/Sentencepiece model</h3><p>Wordpiece字面理解是把word拆成一片一片，它的实现方法就是BPE，而Sentencepiece可以想做是预料中重复出现次数多的片断(它可以是多个词语组成，词语间的空格被保留为特殊标记)<br>BERT便使用了wordpiece模型的一个变体，它包含了：</p>
+<ul>
+<li>在词汇表中的常用词</li>
+<li>其他单词由wordpieces组成</li>
+</ul>
+<p><img src="/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/image07.png" alt></p>
+<p>如果你在一个基于单词的模型中使用BERT，你必须处理这个</p>
+<h3 id="Hybrid-NMT"><a href="#Hybrid-NMT" class="headerlink" title="Hybrid NMT"></a>Hybrid NMT</h3><p>Hybrid NMT是第二类模型中比较经典的一种，这种思路大致思想是，当字典里面有这个word的时候，直接用word embedding，如果没有遇到过这个词，产生了OOV问题，则利用char embedding来学习word embedding来填充这些相对罕见的单词，并产生了超过2BLEU的改进。如下图，当遇到&lt;<em>unk</em>&gt;的时候开始字符级别的束搜索，其它的时候都是基于单词级别的束搜索。</p>
+<p><img src="/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/image08.png" alt></p>
+<p>混合模型与字符级模型相比：</p>
+<ul>
+<li>纯粹的字符级模型能够非常有效地是用字符序列作为条件上下文</li>
+<li>混合模型虽然提供了字符级的隐层表示，但并没有获得比单词级别更低的表示</li>
+</ul>
+<h2 id="FastText-embeddings"><a href="#FastText-embeddings" class="headerlink" title="FastText embeddings"></a>FastText embeddings</h2><p>它是一个类似于word2vecd的单词的表示库，但更适合于具有大量形态学的罕见单词和语言，本质上FastText是字符级别的skipgram和的n-gram的结合，所以fasttext也能解决OOV问题。<br>将单词表示为用边界符号和整词扩充的字符n-grams(下面例子$n=3$)：</p>
+<ul>
+<li>$where=<wh,whe,her,ere,re>,<where>$<blockquote>
+<p>这里的$<her>$或者$<her$不等同于her(她)，这些前缀(<)、后缀(>)和整个词都是独特的</her$不等同于her(她)，这些前缀(<)、后缀(></her></p>
+</blockquote>
+</where></wh,whe,her,ere,re></li>
+<li>将word表示为这些表示的和。上下文单词得分为：<script type="math/tex; mode=display">S(w,c)=\sum_{g\in G(w)}Z^T_gV_C</script><blockquote>
+<p>当然与其获得所有单词的所有n-grams的表示，不如使用哈希表来持久化一些共同的表示，以此拥有固定数量的向量</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/38130825" target="_blank" rel="noopener">一分钟搞懂的算法之BPE算法</a></li>
+<li><a href="https://blog.csdn.net/feilong_csdn/article/details/88655927" target="_blank" rel="noopener">fastText原理和文本分类实战，看这一篇就够了</a></li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Stanleylsx</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://yoursite.com/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/">http://yoursite.com/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://yoursite.com">LSXのBlog</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cs224n%E8%AF%BE%E7%A8%8B/">cs224n课程</a><a class="post-meta__tags" href="/tags/nlp/">nlp</a></div><div class="social-share pull-right" data-disabled="google,facebook,twitter,qzone,douban,tencent,linkedin,diandian"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><nav id="pagination"><div class="next-post pull-right"><a href="/2020/05/22/ConvNets%20for%20NLP/"><span>10 ConvNets for NLP</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="vcomment"></div><script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'Y3GMXKvryJw9CpeduEyC6hh5-9Nh9j0Va',
+  appKey:'9Jc79wdsIqJQfFj1gmJh2vHj',
+  placeholder:'Just go go',
+  avatar:'mm',
+  guest_info:guest_info,
+  pageSize:'10',
+  lang: 'zh-cn'
+})</script></div></div><footer class="footer-bg" style="background-image: url(http://ww1.sinaimg.cn/large/0067fiZ7ly1g1cuf0dr09j31hc0u049j.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2020 By Stanleylsx</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody" target="_blank" rel="noopener"><span>Melody</span></a></div><div class="footer_custom_text">hitokoto</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
