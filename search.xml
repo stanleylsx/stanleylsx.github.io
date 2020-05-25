@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>12 Contextual Word Representations with BERT and Other Pre-trained Language Models</title>
+      <link href="/2020/05/25/Contextual%20Word%20Representations%20with%20BERT%20and%20Other%20Pre-trained%20Language%20Models/"/>
+      <url>/2020/05/25/Contextual%20Word%20Representations%20with%20BERT%20and%20Other%20Pre-trained%20Language%20Models/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script>    <div id="aplayer-LCKJaXWm" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="202373" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555" data-volume="0.5"></div><h2 id="History-and-Background"><a href="#History-and-Background" class="headerlink" title="History and Background"></a>History and Background</h2><h2 id="BERT"><a href="#BERT" class="headerlink" title="BERT"></a>BERT</h2><h2 id="Post-BERT-Pre-training-Advancements"><a href="#Post-BERT-Pre-training-Advancements" class="headerlink" title="Post-BERT Pre-training Advancements"></a>Post-BERT Pre-training Advancements</h2><h2 id="Distillation"><a href="#Distillation" class="headerlink" title="Distillation"></a>Distillation</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> cs224n学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> cs224n课程 </tag>
+            
+            <tag> nlp </tag>
+            
+            <tag> Bert </tag>
+            
+            <tag> Pre-trained Language Models </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>11 Information from parts of words (Subword Models)</title>
       <link href="/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/"/>
       <url>/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/</url>
