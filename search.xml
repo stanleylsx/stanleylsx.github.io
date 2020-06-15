@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>13 Natural Language Generation</title>
+      <link href="/2020/06/15/Natural%20Language%20Generation/"/>
+      <url>/2020/06/15/Natural%20Language%20Generation/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script>    <div id="aplayer-dQJOcoMO" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="368727" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555" data-volume="0.5"></div><hr><h2 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> cs224n学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> cs224n课程 </tag>
+            
+            <tag> nlp </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>文本处理中正则表达式基础</title>
       <link href="/2020/06/11/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E4%B8%AD%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%9F%BA%E7%A1%80/"/>
       <url>/2020/06/11/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E4%B8%AD%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%9F%BA%E7%A1%80/</url>
@@ -56,33 +83,6 @@
             <tag> Transformer </tag>
             
             <tag> ELMo </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>13 Natural Language Generation</title>
-      <link href="/2020/05/31/Natural%20Language%20Generation/"/>
-      <url>/2020/05/31/Natural%20Language%20Generation/</url>
-      
-        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script>    <div id="aplayer-IIVGZrEx" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="368727" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555" data-volume="0.5"></div><hr><h2 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h2>]]></content>
-      
-      
-      <categories>
-          
-          <category> cs224n学习 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> cs224n课程 </tag>
-            
-            <tag> nlp </tag>
             
         </tags>
       
