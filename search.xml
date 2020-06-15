@@ -64,6 +64,33 @@
     
     
     <entry>
+      <title>13 Natural Language Generation</title>
+      <link href="/2020/05/31/Natural%20Language%20Generation/"/>
+      <url>/2020/05/31/Natural%20Language%20Generation/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script>    <div id="aplayer-weaPFKeH" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="368727" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555" data-volume="0.5"></div><hr>]]></content>
+      
+      
+      <categories>
+          
+          <category> cs224n学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> cs224n课程 </tag>
+            
+            <tag> nlp </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>11 Information from parts of words (Subword Models)</title>
       <link href="/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/"/>
       <url>/2020/05/24/Information%20from%20parts%20of%20words%20(Subword%20Models)/</url>
