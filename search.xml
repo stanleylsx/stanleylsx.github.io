@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>14 指代消解</title>
+      <link href="/2020/06/21/%E6%8C%87%E4%BB%A3%E6%B6%88%E8%A7%A3/"/>
+      <url>/2020/06/21/%E6%8C%87%E4%BB%A3%E6%B6%88%E8%A7%A3/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script>    <div id="aplayer-DepIuptB" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="27867449" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555" data-volume="0.5"></div><hr><h2 id="什么是指代消解"><a href="#什么是指代消解" class="headerlink" title="什么是指代消解"></a>什么是指代消解</h2><h2 id="指代检测"><a href="#指代检测" class="headerlink" title="指代检测"></a>指代检测</h2><h2 id="首先，一些基于语言学的共指关系"><a href="#首先，一些基于语言学的共指关系" class="headerlink" title="首先，一些基于语言学的共指关系"></a>首先，一些基于语言学的共指关系</h2><h2 id="传统代词回指解析：Hobbs朴素算法"><a href="#传统代词回指解析：Hobbs朴素算法" class="headerlink" title="传统代词回指解析：Hobbs朴素算法"></a>传统代词回指解析：Hobbs朴素算法</h2><h2 id="共指模型：指代对"><a href="#共指模型：指代对" class="headerlink" title="共指模型：指代对"></a>共指模型：指代对</h2><h2 id="共指模型：指代排行"><a href="#共指模型：指代排行" class="headerlink" title="共指模型：指代排行"></a>共指模型：指代排行</h2><h2 id="端到端-End-to-end-模型"><a href="#端到端-End-to-end-模型" class="headerlink" title="端到端(End-to-end)模型"></a>端到端(End-to-end)模型</h2><h2 id="最后一种指代办法：Bas聚类"><a href="#最后一种指代办法：Bas聚类" class="headerlink" title="最后一种指代办法：Bas聚类"></a>最后一种指代办法：Bas聚类</h2><h2 id="指代问题的评估"><a href="#指代问题的评估" class="headerlink" title="指代问题的评估"></a>指代问题的评估</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> cs224n学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> cs224n课程 </tag>
+            
+            <tag> nlp </tag>
+            
+            <tag> 指代消解 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>13 自然语言生成</title>
       <link href="/2020/06/17/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90/"/>
       <url>/2020/06/17/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90/</url>
@@ -25,35 +54,6 @@
             <tag> nlp </tag>
             
             <tag> 自然语言生成 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>14 指代消解</title>
-      <link href="/2020/06/17/%E6%8C%87%E4%BB%A3%E6%B6%88%E8%A7%A3/"/>
-      <url>/2020/06/17/%E6%8C%87%E4%BB%A3%E6%B6%88%E8%A7%A3/</url>
-      
-        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script>    <div id="aplayer-IqCuIivR" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="27867449" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555" data-volume="0.5"></div><hr><h2 id="什么是指代消解"><a href="#什么是指代消解" class="headerlink" title="什么是指代消解"></a>什么是指代消解</h2><h2 id="指代检测"><a href="#指代检测" class="headerlink" title="指代检测"></a>指代检测</h2><h2 id="首先，一些基于语言学的共指关系"><a href="#首先，一些基于语言学的共指关系" class="headerlink" title="首先，一些基于语言学的共指关系"></a>首先，一些基于语言学的共指关系</h2><h2 id="传统代词回指解析：Hobbs朴素算法"><a href="#传统代词回指解析：Hobbs朴素算法" class="headerlink" title="传统代词回指解析：Hobbs朴素算法"></a>传统代词回指解析：Hobbs朴素算法</h2><h2 id="共指模型：指代对"><a href="#共指模型：指代对" class="headerlink" title="共指模型：指代对"></a>共指模型：指代对</h2><h2 id="共指模型：指代排行"><a href="#共指模型：指代排行" class="headerlink" title="共指模型：指代排行"></a>共指模型：指代排行</h2><h2 id="端到端-End-to-end-模型"><a href="#端到端-End-to-end-模型" class="headerlink" title="端到端(End-to-end)模型"></a>端到端(End-to-end)模型</h2><h2 id="最后一种指代办法：Bas聚类"><a href="#最后一种指代办法：Bas聚类" class="headerlink" title="最后一种指代办法：Bas聚类"></a>最后一种指代办法：Bas聚类</h2><h2 id="指代问题的评估"><a href="#指代问题的评估" class="headerlink" title="指代问题的评估"></a>指代问题的评估</h2>]]></content>
-      
-      
-      <categories>
-          
-          <category> cs224n学习 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> cs224n课程 </tag>
-            
-            <tag> nlp </tag>
-            
-            <tag> 指代消解 </tag>
             
         </tags>
       
