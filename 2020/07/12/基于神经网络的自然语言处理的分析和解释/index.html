@@ -1,0 +1,99 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="16-基于神经网络的自然语言处理的分析和解释"><meta name="keywords" content="cs224n课程"><meta name="author" content="Stanleylsx"><meta name="copyright" content="Stanleylsx"><title>16-基于神经网络的自然语言处理的分析和解释 | LSXのBlog</title><link rel="shortcut icon" href="/umbrella.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3b6aa10c68000f1e94f4d4b68f24e650";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://v1.hitokoto.cn/?encode=js&amp;charset=utf-8&amp;select=.footer_custom_text" defer></script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
+<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
+<script src="\assets\js\Meting.min.js" class="meting-script-marker"></script>
+</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#动机-我们的模型在做什么"><span class="toc-number">1.</span> <span class="toc-text">动机:我们的模型在做什么?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#神经网络作为语言测试的主体"><span class="toc-number">2.</span> <span class="toc-text">神经网络作为语言测试的主体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#仔细的消融研究和结构修改"><span class="toc-number">3.</span> <span class="toc-text">仔细的消融研究和结构修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析内在可解释的架构"><span class="toc-number">4.</span> <span class="toc-text">分析内在可解释的架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#打破NLP模式"><span class="toc-number">5.</span> <span class="toc-text">打破NLP模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用监督方法分析表示"><span class="toc-number">6.</span> <span class="toc-text">使用监督方法分析表示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#研究中的综合见解"><span class="toc-number">7.</span> <span class="toc-text">研究中的综合见解</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/miao.jpg"></div><div class="author-info__name text-center">Stanleylsx</div><div class="author-info__description text-center">达拉崩巴斑得贝迪卜多比鲁翁</div><div class="follow-button"><a href="https://github.com/stanleylsx" target="_blank" rel="noopener">Follow Me</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">20</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">30</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">4</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">Friends</div><a class="author-info-links__name text-center" href="https://ty-chen.github.io/" target="_blank" rel="noopener">Ty Chen</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(http://ww1.sinaimg.cn/large/0067fiZ7ly1g1cuf0dr09j31hc0u049j.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">LSXのBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="/playlist">歌单</a><a class="site-page" href="/gallery">相册</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">16-基于神经网络的自然语言处理的分析和解释</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-12</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/cs224n%E5%AD%A6%E4%B9%A0/">cs224n学习</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">777</span><span class="post-meta__separator">|</span><span>阅读时长: 2 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content">
+    <div id="aplayer-WiTcHwDb" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="1449678888" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555" data-volume="0.5"></div>
+<hr>
+<h2 id="动机-我们的模型在做什么"><a href="#动机-我们的模型在做什么" class="headerlink" title="动机:我们的模型在做什么?"></a>动机:我们的模型在做什么?</h2><p><img src="/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/image01.png" alt></p>
+<p>我们还不清楚算法学习到了什么功能，而且它们的复杂性使我们无法准确理解模型本身。<br>我们怎样才能使模型的效果更好呢？<br>一般认为对于神经网络，堆叠更多的层会获得更好的效果，但这完全是黑盒的，我们更加无法理解神经网络。  </p>
+<p><img src="/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/image02.png" alt></p>
+<h2 id="神经网络作为语言测试的主体"><a href="#神经网络作为语言测试的主体" class="headerlink" title="神经网络作为语言测试的主体"></a>神经网络作为语言测试的主体</h2><p>我们如何理解人类的语言行为?<br>一种方法:最小对立体。即什么对说话者来说是“好的”?<br>观点:英语现在时态动词的数量与主语一致。 </p>
+<p><img src="/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/image03.png" alt> </p>
+<p>我们如何理解语言模型(LM)中的语言行为?<br>一种方法:最小对立体。被接受的句子的可能性高吗?  </p>
+<p><img src="/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/image04.png" alt> </p>
+<blockquote>
+<p>前提:语言模型应该给可接受的句子分配更高的概率。</p>
+</blockquote>
+<p>问提:LSTM语言模型如何使用其上下文?<br>方法:删除测试集比较长的上下文，或用较长的单词替换它们。评估LM困惑度是否改变。  </p>
+<p><img src="/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/image05.png" alt> </p>
+<p>如上图所示，当长度在50以上时，困惑度变化不大，说明当前词的上下文超过50个词时，LSTM不再起作用，也即是词袋大小为50左右。</p>
+<h2 id="仔细的消融研究和结构修改"><a href="#仔细的消融研究和结构修改" class="headerlink" title="仔细的消融研究和结构修改"></a>仔细的消融研究和结构修改</h2><p>问题:关于我的网络结构设计，什么是必要的，甚至是好的?<br>方法:通过有针对性地改变模型中的结构，观察验证准确性。 </p>
+<p><img src="/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/image06.png" alt> </p>
+<p>如上图，通过改变transformer层网络的self-attention和feed-forward的位置，观察困惑度的变化。</p>
+<h2 id="分析内在可解释的架构"><a href="#分析内在可解释的架构" class="headerlink" title="分析内在可解释的架构"></a>分析内在可解释的架构</h2><p>有些架构具有便于检查的组件，例如Bert中我们可以对多头注意力中的每一个注意力进行描述和探究。</p>
+<p><img src="/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/image07.png" alt> </p>
+<h2 id="打破NLP模式"><a href="#打破NLP模式" class="headerlink" title="打破NLP模式"></a>打破NLP模式</h2><p>提问:我们的模型对于输入中的无害变化是否稳健?即鲁棒性如何?<br>在这种情况下，我们所说的健壮是指它们的输出不会改变。  </p>
+<p><img src="/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/image08.png" alt> </p>
+<p>如上图中的QA模型，一开始模型预测了正确答案John Elway，但是添加了一些不相关的句子在文章中之后预测发生了错误，所以这个模型无法工作。</p>
+<p><img src="/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/image09.png" alt> </p>
+<p>我们的模型对输入中的拼写错误或顺序调换等干扰是否健壮?从上图可以看到模型对这些都很敏感，无法获得很好的效果。</p>
+<h2 id="使用监督方法分析表示"><a href="#使用监督方法分析表示" class="headerlink" title="使用监督方法分析表示"></a>使用监督方法分析表示</h2><p><img src="/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/image10.png" alt> </p>
+<p>由上图可以看到，有时候，Bert的中间层可以取得更好的效果。</p>
+<h2 id="研究中的综合见解"><a href="#研究中的综合见解" class="headerlink" title="研究中的综合见解"></a>研究中的综合见解</h2><p>神经模型是复杂的，令人着迷的东西，我们目前还不了解，但我们正在进步，以更好地了解它们。</p>
+<ul>
+<li>了解模型在特定现象上的行为；</li>
+<li>了解模型从主题或任务中学到的知识；</li>
+<li>了解看似无害的输入变化却使得模型失效；</li>
+<li>还有很多其他事情，每天都在更新。</li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Stanleylsx</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://yoursite.com/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/">http://yoursite.com/2020/07/12/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E9%87%8A/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://yoursite.com">LSXのBlog</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cs224n%E8%AF%BE%E7%A8%8B/">cs224n课程</a></div><div class="social-share pull-right" data-sites="qq,weibo,wechat" data-image="https://d.lanrentuku.com/down/png/1412/christmas-2014-rocket/snowflakes-120px.png"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><nav id="pagination"><div class="next-post pull-right"><a href="/2020/07/05/%E6%88%90%E5%88%86%E5%8F%A5%E6%B3%95%E5%88%86%E6%9E%90%E5%92%8C%E6%A0%91%E9%80%92%E5%BD%92%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"><span>15-成分句法分析和树递归神经网络</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="vcomment"></div><script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'Y3GMXKvryJw9CpeduEyC6hh5-9Nh9j0Va',
+  appKey:'9Jc79wdsIqJQfFj1gmJh2vHj',
+  placeholder:'Just go go',
+  avatar:'mm',
+  guest_info:guest_info,
+  pageSize:'10',
+  lang: 'zh-cn'
+})</script></div></div><footer class="footer-bg" style="background-image: url(http://ww1.sinaimg.cn/large/0067fiZ7ly1g1cuf0dr09j31hc0u049j.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2020 By Stanleylsx</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody" target="_blank" rel="noopener"><span>Melody</span></a></div><div class="footer_custom_text">hitokoto</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
